@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApiIntegration
 {
+    using System.Collections;
+    using System.Runtime.CompilerServices;
+
     public class TourRepository : ITourRepository
     {
         private readonly Dictionary<int, Tour> tours;
@@ -95,6 +98,14 @@ namespace ApiIntegration
             }
 
             return Task.FromResult(tour);
+        }
+
+        public Task<Tour> Get(Func<Tour, bool> predicate)
+        {
+            // based on assumption that the tourRef is unique
+            return Task.FromResult(  
+                (from tour in tours where predicate(tour.Value) select tour.Value).FirstOrDefault());
+
         }
 
         public Task Update(Tour tour)

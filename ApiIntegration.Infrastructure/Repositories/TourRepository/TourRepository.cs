@@ -1,21 +1,22 @@
-﻿using ApiIntegration.Interfaces;
-using ApiIntegration.Models;
+﻿
+using ApiIntegration.Infrastructure.Repositories.Tour;
+using ApiIntegration.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiIntegration
+namespace ApiIntegration.Infrastructure.Repositories.TourRepository
 {
     public class TourRepository : ITourRepository
     {
-        private readonly Dictionary<int, Tour> tours;
+        private readonly Dictionary<int, TourEntity> tours;
 
         public TourRepository()
         {
-            this.tours = new Dictionary<int, Tour>()
+            tours = new Dictionary<int, TourEntity>()
             {
-                { 1, new Tour()
+                { 1, new TourEntity()
                     {
                         TourId = 1,
                         TourRef = "EUR123",
@@ -24,9 +25,9 @@ namespace ApiIntegration
                         Active = true,
                         ReviewCount = 13,
                         ReviewScore = 4.3m,
-                        Availabilities = new List<TourAvailability>()
+                        Availabilities = new List<TourAvailabilityEntity>()
                         {
-                            new TourAvailability()
+                            new TourAvailabilityEntity()
                             {
                                 TourId = 1,
                                 AdultPrice = 500,
@@ -34,7 +35,7 @@ namespace ApiIntegration
                                 TourDuration = 6,
                                 AvailabilityCount = 9
                             },
-                            new TourAvailability()
+                            new TourAvailabilityEntity()
                             {
                                 TourId = 1,
                                 AdultPrice = 450,
@@ -44,7 +45,7 @@ namespace ApiIntegration
                             }
                         }
                     } },
-                { 2, new Tour()
+                { 2, new TourEntity()
                     {
                         TourId = 2,
                         TourRef = "EUR456",
@@ -53,9 +54,9 @@ namespace ApiIntegration
                         Active = true,
                         ReviewCount = 55,
                         ReviewScore = 4.8m,
-                        Availabilities = new List<TourAvailability>()
+                        Availabilities = new List<TourAvailabilityEntity>()
                         {
-                            new TourAvailability()
+                            new TourAvailabilityEntity()
                             {
                                 TourId = 2,
                                 AdultPrice = 720,
@@ -63,7 +64,7 @@ namespace ApiIntegration
                                 TourDuration = 11,
                                 AvailabilityCount = 4
                             },
-                            new TourAvailability()
+                            new TourAvailabilityEntity()
                             {
                                 TourId = 2,
                                 AdultPrice = 720,
@@ -77,12 +78,12 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public Task<TourEntity> Get(int tourId, string tourRef)
         {
-            Tour tour;
-            if (tourId != default && this.tours.ContainsKey(tourId))
+            TourEntity tour;
+            if (tourId != default && tours.ContainsKey(tourId))
             {
-                tour = this.tours[tourId];
+                tour = tours[tourId];
             }
             else if (!string.IsNullOrWhiteSpace(tourRef))
             {
@@ -97,7 +98,40 @@ namespace ApiIntegration
             return Task.FromResult(tour);
         }
 
-        public Task Update(Tour tour)
+        public Task<TourEntity> GetByTourRef(string tourRef)
+        {
+            TourEntity tour;
+             if (!string.IsNullOrWhiteSpace(tourRef))
+            {
+                tour = tours.Values
+                    .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                tour = null;
+            }
+
+            return Task.FromResult(tour);
+        }
+
+        public Task<List<TourEntity>> GetByTourRefs(string[] tourRefs)
+        {
+            List<TourEntity> toursToReturn;
+
+            if (tourRefs.Length > 0)
+            {
+                toursToReturn = tours.Values
+                    .Where(t => tourRefs.Any(tourRef => tourRef == t.TourRef)).ToList();
+            }
+            else
+            {
+                toursToReturn = null;
+            }
+
+            return Task.FromResult(toursToReturn);
+        }
+
+        public Task Update(TourEntity tour)
         {
             if (tour.TourId != default
                     && tours.ContainsKey(tour.TourId))

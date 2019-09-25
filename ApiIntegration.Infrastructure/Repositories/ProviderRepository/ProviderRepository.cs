@@ -1,20 +1,21 @@
-﻿using ApiIntegration.Interfaces;
+﻿using ApiIntegration.Infrastructure.Repositories.Provider;
 using ApiIntegration.Models;
+using ApiIntegration.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ApiIntegration
+namespace ApiIntegration.Infrastructure.Repositories.ProviderRepository
 {
     public class ProviderRepository : IProviderRepository
     {
-        private readonly Dictionary<int, Provider> providers;
+        private readonly Dictionary<int, ProviderEntity> providers;
 
 
         public ProviderRepository()
         {
-            this.providers = new Dictionary<int, Provider>()
+            providers = new Dictionary<int, ProviderEntity>()
             {
-                { 1, new Provider()
+                { 1, new ProviderEntity()
                     {
                         ProviderId = 1,
                         Name = "Awesome Cycling Holidays",
@@ -24,10 +25,10 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Provider> Get(int providerId)
+        public Task<ProviderEntity> Get(int providerId)
         {
-            Provider provider;
-            if (!this.providers.TryGetValue(providerId, out provider))
+            ProviderEntity provider;
+            if (!providers.TryGetValue(providerId, out provider))
             {
                 provider = null;
             }

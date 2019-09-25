@@ -1,6 +1,6 @@
-﻿namespace ApiIntegration.Models
+﻿namespace ApiIntegration.Models.Entities
 {
-    public class Provider
+    public class ProviderEntity
     {
         public int ProviderId { get; set; }
         public string Name { get; set; }

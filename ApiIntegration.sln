@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIntegration", "ApiIntegration\ApiIntegration.csproj", "{85465E9D-3461-4E79-9726-2FA8789D8307}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIntegration.Core", "ApiIntegration\ApiIntegration.Core.csproj", "{85465E9D-3461-4E79-9726-2FA8789D8307}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIntegration.Tests", "ApiIntegration.Tests\ApiIntegration.Tests.csproj", "{7B52A055-51CF-462F-BFE5-027569E2BDCC}"
 EndProject
@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		ReadMe.md = ReadMe.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIntegration.Infrastructure", "ApiIntegration.Infrastructure\ApiIntegration.Infrastructure.csproj", "{569108F2-D724-4857-AEBB-135A4F34C716}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIntegration.Models", "ApiIntegration.Models\ApiIntegration.Models.csproj", "{81DC6BEB-1919-4D62-9DCA-C2109F60CEA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,14 @@ Global
 		{7B52A055-51CF-462F-BFE5-027569E2BDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B52A055-51CF-462F-BFE5-027569E2BDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B52A055-51CF-462F-BFE5-027569E2BDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{569108F2-D724-4857-AEBB-135A4F34C716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{569108F2-D724-4857-AEBB-135A4F34C716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{569108F2-D724-4857-AEBB-135A4F34C716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{569108F2-D724-4857-AEBB-135A4F34C716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DC6BEB-1919-4D62-9DCA-C2109F60CEA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DC6BEB-1919-4D62-9DCA-C2109F60CEA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DC6BEB-1919-4D62-9DCA-C2109F60CEA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DC6BEB-1919-4D62-9DCA-C2109F60CEA3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

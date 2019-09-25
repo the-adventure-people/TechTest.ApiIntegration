@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ApiIntegration.Models
+namespace ApiIntegration.Models.Entities
 {
-    public class Tour
+    public class TourEntity
     {
         public int TourId { get; set; }
         public string TourRef { get; set; }
@@ -11,6 +11,6 @@ namespace ApiIntegration.Models
         public decimal ReviewScore { get; set; }
         public int ReviewCount { get; set; }
         public bool Active { get; set; }
-        public List<TourAvailability> Availabilities { get; set; }
+        public List<TourAvailabilityEntity> Availabilities { get; set; }
     }
 }

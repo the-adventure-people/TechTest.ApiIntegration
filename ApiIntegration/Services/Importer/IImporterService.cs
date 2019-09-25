@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ApiIntegration.Interfaces
+namespace ApiIntegration.Core.Services.Importer
 {
-    public interface IImporter
+    public interface IImporterService
     {
         Task Execute(int providerId);
     }

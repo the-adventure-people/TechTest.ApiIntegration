@@ -6,6 +6,12 @@ namespace ApiIntegration.Interfaces
     public interface ITourRepository
     {
         Task Update(Tour tour);
-        Task<Tour> Get(int providerId, string tourRef);
+
+        //Fix: providerId changed to tourId
+        Task<Tour> Get(int tourId, string tourRef);
+
+        //More typical methods for getting Tour.
+        Task<Tour> Get(int tourId);
+        Task<Tour> FindByTourRef(string tourRef);
     }
 }

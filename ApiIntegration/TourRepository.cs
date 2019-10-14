@@ -9,13 +9,13 @@ namespace ApiIntegration
 {
     public class TourRepository : ITourRepository
     {
-        private readonly Dictionary<int, Tour> tours;
+        private readonly Dictionary<int, Tour> _tours;
 
         public TourRepository()
         {
-            this.tours = new Dictionary<int, Tour>()
+            _tours = new Dictionary<int, Tour>
             {
-                { 1, new Tour()
+                { 1, new Tour
                     {
                         TourId = 1,
                         TourRef = "EUR123",
@@ -24,9 +24,9 @@ namespace ApiIntegration
                         Active = true,
                         ReviewCount = 13,
                         ReviewScore = 4.3m,
-                        Availabilities = new List<TourAvailability>()
+                        Availabilities = new List<TourAvailability>
                         {
-                            new TourAvailability()
+                            new TourAvailability
                             {
                                 TourId = 1,
                                 AdultPrice = 500,
@@ -34,7 +34,7 @@ namespace ApiIntegration
                                 TourDuration = 6,
                                 AvailabilityCount = 9
                             },
-                            new TourAvailability()
+                            new TourAvailability
                             {
                                 TourId = 1,
                                 AdultPrice = 450,
@@ -44,7 +44,7 @@ namespace ApiIntegration
                             }
                         }
                     } },
-                { 2, new Tour()
+                { 2, new Tour
                     {
                         TourId = 2,
                         TourRef = "EUR456",
@@ -53,9 +53,9 @@ namespace ApiIntegration
                         Active = true,
                         ReviewCount = 55,
                         ReviewScore = 4.8m,
-                        Availabilities = new List<TourAvailability>()
+                        Availabilities = new List<TourAvailability>
                         {
-                            new TourAvailability()
+                            new TourAvailability
                             {
                                 TourId = 2,
                                 AdultPrice = 720,
@@ -63,7 +63,7 @@ namespace ApiIntegration
                                 TourDuration = 11,
                                 AvailabilityCount = 4
                             },
-                            new TourAvailability()
+                            new TourAvailability
                             {
                                 TourId = 2,
                                 AdultPrice = 720,
@@ -80,13 +80,13 @@ namespace ApiIntegration
         public Task<Tour> Get(int tourId, string tourRef)
         {
             Tour tour;
-            if (tourId != default && this.tours.ContainsKey(tourId))
+            if (tourId != default && _tours.ContainsKey(tourId))
             {
-                tour = this.tours[tourId];
+                tour = _tours[tourId];
             }
             else if (!string.IsNullOrWhiteSpace(tourRef))
             {
-                tour = tours.Values
+                tour = _tours.Values
                     .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
             }
             else
@@ -97,12 +97,31 @@ namespace ApiIntegration
             return Task.FromResult(tour);
         }
 
+        public Task<Tour> Get(int tourId)
+        {
+            Tour tour;
+            if (tourId != default && _tours.ContainsKey(tourId))
+            {
+                tour = _tours[tourId];
+            }
+            else
+            {
+                tour = null;
+            }
+
+            return Task.FromResult(tour);
+        }
+
+        public Task<Dictionary<int, Tour>> GetAllTours()
+        {
+            return Task.FromResult(_tours);
+        }
+
         public Task Update(Tour tour)
         {
-            if (tour.TourId != default
-                    && tours.ContainsKey(tour.TourId))
+            if (tour.TourId != default && _tours.ContainsKey(tour.TourId))
             {
-                tours[tour.TourId] = tour;
+                _tours[tour.TourId] = tour;
             }
             else
             {

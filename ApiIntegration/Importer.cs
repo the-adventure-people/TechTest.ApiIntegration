@@ -74,9 +74,6 @@ namespace ApiIntegration
 
                                 // save to repository
                                 await _tourRepository.Update(tour);
-
-                                var test = _tourRepository.Get(tourId).Result;
-                                var x = 1;
                             }
                             else
                             {

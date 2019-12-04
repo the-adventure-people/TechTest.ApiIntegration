@@ -18,6 +18,7 @@ namespace ApiIntegration
                     {
                         ProviderId = 1,
                         Name = "Awesome Cycling Holidays",
+                        Url = "http://tap.techtest.s3-website.eu-west-2.amazonaws.com/",
                         Commission = 0.15m
                     }
                 }

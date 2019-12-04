@@ -5,6 +5,6 @@ namespace ApiIntegration.Interfaces
 {
     public interface IApiDownloader
     {
-        Task<ApiAvailabilityResponse> Download();
+        Task<ApiAvailabilityResponse> Download(string url);
     }
 }

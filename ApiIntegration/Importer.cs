@@ -1,7 +1,10 @@
 ﻿using ApiIntegration.Interfaces;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
+using System.Linq;
+using ApiIntegration.Models;
+using System.Collections.Generic;
+using ApiIntegration.ProviderModels;
 
 namespace ApiIntegration
 {
@@ -29,7 +32,15 @@ namespace ApiIntegration
         {
             logger.LogInformation("Download Started");
 
-            var providerResponse = await apiDownloader.Download();
+            var providerInfo = await providerRepository.Get(providerId);
+            if (providerInfo == null)
+            {
+                var errorMessage = $"A provider with Id '{providerId}' could not be found";
+                logger.LogError(errorMessage);
+                throw new KeyNotFoundException(errorMessage);
+            }
+
+            var providerResponse = await apiDownloader.Download(providerInfo.Url);
 
             // Transform provider model to our model
 

@@ -8,12 +8,12 @@ namespace ApiIntegration.Tests
 {
     class ProviderDiscountStrategyTests
     {
-        private readonly Mock<ILogger> mockedLogger;
+        private readonly Mock<ILogger<ProviderDiscountStrategy>> mockedLogger;
         private ProviderDiscountStrategy discountStrategy;
 
         public ProviderDiscountStrategyTests()
         {
-            mockedLogger = new Mock<ILogger>();
+            mockedLogger = new Mock<ILogger<ProviderDiscountStrategy>>();
         }
 
         [SetUp]

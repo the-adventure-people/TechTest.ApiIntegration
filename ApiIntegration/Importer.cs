@@ -13,24 +13,27 @@ namespace ApiIntegration
         private readonly ITourRepository tourRepository;
         private readonly IProviderRepository providerRepository;
         private readonly IApiDownloader apiDownloader;
-        private readonly ILogger logger;
+        private readonly IPricingStrategy pricingStrategy;
+        private readonly ILogger<Importer> logger;
 
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
-            IApiDownloader apiDownloader, 
-            ILogger logger)
+            IApiDownloader apiDownloader,
+            IPricingStrategy pricingStrategy,
+            ILogger<Importer> logger
+           )
         {
             this.tourRepository = tourRepository;
             this.providerRepository = providerRepository;
             this.apiDownloader = apiDownloader;
+            this.pricingStrategy = pricingStrategy;
             this.logger = logger;
         }
 
-
         public async Task Execute(int providerId)
         {
-            logger.LogInformation("Download Started");
+            logger.LogInformation($"Download for providerId '{providerId}' started");
 
             var providerInfo = await providerRepository.Get(providerId);
             if (providerInfo == null)
@@ -43,17 +46,42 @@ namespace ApiIntegration
             var providerResponse = await apiDownloader.Download(providerInfo.Url);
 
             // Transform provider model to our model
+            var availabilityByProduct = providerResponse.Body.GroupBy(x => x.ProductCode);
+            foreach (var productAvailabilites in availabilityByProduct)
+            {
+                var tour = await tourRepository.Get(default, productAvailabilites.Key);
+                
+                // We only want to update existing tour, so skip any that don't already exist
+                if (tour == null) continue;
 
-            // Adjust prices
+                var newTourAvailabilities = new List<TourAvailability>();
+                foreach (var productAvailability in productAvailabilites)
+                {
+                    var newTourAvailability = MapAvailability(tour.TourId, productAvailability);
+                    
+                    newTourAvailability.AdultPrice = pricingStrategy.AdjustPrice(newTourAvailability.AdultPrice, 
+                        providerInfo.Discount, providerInfo.Commission);
 
-            // Save to repositories
+                    newTourAvailabilities.Add(newTourAvailability);
+                }
 
-            logger.LogInformation("Download Finished");
+                tour.Availabilities = newTourAvailabilities;
+                await tourRepository.Update(tour);
+            }
+
+            logger.LogInformation($"Download for providerId '{providerId}' Finished");
         }
 
-        private async Task<decimal> AdjustPrice(decimal price)
+        private TourAvailability MapAvailability(int tourId, Availability availability)
         {
-            throw new NotImplementedException();
+            return new TourAvailability
+            {
+                TourId = tourId,
+                StartDate = availability.DepartureDate,
+                TourDuration = availability.Nights,
+                AdultPrice = availability.Price,
+                AvailabilityCount = availability.Spaces
+            };
         }
     }
 }

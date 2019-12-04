@@ -49,7 +49,7 @@ namespace ApiIntegration
             var availabilityByProduct = providerResponse.Body.GroupBy(x => x.ProductCode);
             foreach (var productAvailabilites in availabilityByProduct)
             {
-                var tour = await tourRepository.Get(default, productAvailabilites.Key);
+                var tour = await tourRepository.Get(productAvailabilites.Key);
                 
                 // We only want to update existing tour, so skip any that don't already exist
                 if (tour == null) continue;

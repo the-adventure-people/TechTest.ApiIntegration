@@ -108,7 +108,7 @@ namespace ApiIntegration.Tests
             mockTourRepository.Setup(x => x.Update(It.IsAny<Tour>())).Callback<Tour>(t => savedTour = t);
             mockProviderRepository.Setup(x => x.Get(provider.ProviderId)).ReturnsAsync(provider);
             mockApiDownloader.Setup(x => x.Download(provider.Url)).ReturnsAsync(apiAvailabilityResponse);
-            mockTourRepository.Setup(x => x.Get(default, refCode)).ReturnsAsync(tour);
+            mockTourRepository.Setup(x => x.Get(refCode)).ReturnsAsync(tour);
             mockPricingStrategy.Setup(x => x.AdjustPrice(initialPrice, provider.Discount, provider.Commission))
                 .Returns(adjustedPrice);
 

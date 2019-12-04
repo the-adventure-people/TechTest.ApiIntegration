@@ -77,14 +77,25 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public Task<Tour> Get(int tourId)
         {
             Tour tour;
             if (tourId != default && this.tours.ContainsKey(tourId))
             {
                 tour = this.tours[tourId];
             }
-            else if (!string.IsNullOrWhiteSpace(tourRef))
+            else
+            {
+                tour = null;
+            }
+
+            return Task.FromResult(tour);
+        }
+
+        public Task<Tour> Get(string tourRef)
+        {
+            Tour tour;
+            if (!string.IsNullOrWhiteSpace(tourRef))
             {
                 tour = tours.Values
                     .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));

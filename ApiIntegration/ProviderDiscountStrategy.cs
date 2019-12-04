@@ -17,16 +17,12 @@ namespace ApiIntegration
         {
             if (percentageDiscount > 1 || percentageDiscount < 0)
             {
-                var errorMessage = $"A percentage discount of '{percentageDiscount}' is invalid, it must fall between the range [0.0 - 1.0]";
-                logger.LogError(errorMessage);
-                throw new ArgumentException(errorMessage);
+                throw new ArgumentException($"A percentage discount of '{percentageDiscount}' is invalid, it must fall between the range [0.0 - 1.0]");
             }
 
             if (commission < 0)
             {
-                var errorMessage = $"A commission of '{commission}' is invalid, it cannot be a negative value";
-                logger.LogError(errorMessage);
-                throw new ArgumentException(errorMessage);
+                throw new ArgumentException($"A commission of '{commission}' is invalid, it cannot be a negative value");
             }
 
             return (price * (1m - percentageDiscount)) + (price * commission);

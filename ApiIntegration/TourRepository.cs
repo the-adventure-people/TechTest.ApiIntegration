@@ -29,7 +29,7 @@ namespace ApiIntegration
                             new TourAvailability()
                             {
                                 TourId = 1,
-                                AdultPrice = 500,
+                                SellingPrice = 500,
                                 StartDate = new DateTime(2020, 6, 20),
                                 TourDuration = 6,
                                 AvailabilityCount = 9
@@ -37,7 +37,7 @@ namespace ApiIntegration
                             new TourAvailability()
                             {
                                 TourId = 1,
-                                AdultPrice = 450,
+                                SellingPrice = 450,
                                 StartDate = new DateTime(2020, 6, 27),
                                 TourDuration = 6,
                                 AvailabilityCount = 9
@@ -58,7 +58,7 @@ namespace ApiIntegration
                             new TourAvailability()
                             {
                                 TourId = 2,
-                                AdultPrice = 720,
+                                SellingPrice = 720,
                                 StartDate = new DateTime(2020, 3, 10),
                                 TourDuration = 11,
                                 AvailabilityCount = 4
@@ -66,7 +66,7 @@ namespace ApiIntegration
                             new TourAvailability()
                             {
                                 TourId = 2,
-                                AdultPrice = 720,
+                                SellingPrice = 720,
                                 StartDate = new DateTime(2020, 3, 20),
                                 TourDuration = 11,
                                 AvailabilityCount = 5

@@ -1,7 +1,7 @@
 # API Integration Technical Test
 
 We need to connect a new provider (id = 1) and download their JSON tour availability data via an API
-call, manipulate it into what we need, and then import it into our database.Please create a branch named after your name and create a pull request when finished.The program needs to:
+call, manipulate it into what we need, and then import it into our database.Please create a fork using your github account and create a branch named after your name for your code.When you're happy and have completed your tasks please create a pull request and let us know you've finished.The program needs to:
 
 1. Compile without errors
 2. Run end to end (ie: complete the import process successfully)
@@ -13,14 +13,14 @@ call, manipulate it into what we need, and then import it into our database.Pl
 You can use any online resource to help you complete the test. We estimate it will take under 2 hours to
 complete the test, but there is no actual time limit.Some notes on code setup:
 We have 2 projects, a class library for your code - ApiIntegration.csproj and ApiIntegration.Tests for
-any test you wish to write. You may alter the projects as you see fit to improve coding standards. 
+any test you wish to write. You may alter the projects / create new ones as you see fit to improve coding standards. 
 
 The program entry is in the Importer class, and the Execute function starts the
 importer process. The interface ### Solution structure:
 - "ProviderModels" holds the providers specific model classes (for deserialization)
 - "Models" holds our own models
 - "Interfaces" holds the interfaces for our implementations. Feel free to create new ones
-or modify the existing ones should you see fit.## Tests:
+or modify the existing ones should you see fit.## Tasks:
 
 In the Importer class, complete the Importer.Begin method so that:
 1. **Provider Data Download:**
@@ -33,11 +33,11 @@ In the Importer class, complete the Importer.Begin method so that:
       be inserted into the database.
     
 3. **Data Manipulation:**
-    - The adult price we store in our database is the value we show to customers on the website. This means it needs
-    to include our commision on top of the provider price. The commission percentage is found on the provider model
+    - The selling price we store in our database is the value we show to customers on the website. This means it needs
+    to include our commission on top of the provider price. The commission percentage is found on the provider model
     and is applied to the full provider price.
-    - The adult price must also include a 5% discount from the provider price.
-    - AdultPrice = ProviderPrice - Discount + Commission
+    - We're also running a sale on the website. The discount is 5% off from the provider's price.
+    - SellingPrice = ProviderPrice + Commission - Discount
 
 ### Other Notes
 - We've implemented in memory versions of the repositories. Please use these implementations rather than setting up a database.

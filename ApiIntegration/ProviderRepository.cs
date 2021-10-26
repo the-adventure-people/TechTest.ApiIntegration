@@ -9,7 +9,6 @@ namespace ApiIntegration
     {
         private readonly Dictionary<int, Provider> providers;
 
-
         public ProviderRepository()
         {
             this.providers = new Dictionary<int, Provider>()
@@ -24,7 +23,7 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Provider> Get(int providerId)
+        public async Task<Provider> GetAsync(int providerId)
         {
             Provider provider;
             if (!this.providers.TryGetValue(providerId, out provider))
@@ -32,7 +31,7 @@ namespace ApiIntegration
                 provider = null;
             }
 
-            return Task.FromResult(provider);
+            return provider;
         }
     }
 }

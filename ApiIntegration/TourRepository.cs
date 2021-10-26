@@ -1,5 +1,6 @@
 ﻿using ApiIntegration.Interfaces;
 using ApiIntegration.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public async Task<Tour> GetTourAsync(int tourId, string tourRef)
         {
             Tour tour;
             if (tourId != default && this.tours.ContainsKey(tourId))
@@ -94,13 +95,13 @@ namespace ApiIntegration
                 tour = null;
             }
 
-            return Task.FromResult(tour);
+            return tour;
         }
 
-        public Task Update(Tour tour)
+        public async Task UpdateTourAsync(Tour tour)
         {
             if (tour.TourId != default
-                    && tours.ContainsKey(tour.TourId))
+                && tours.ContainsKey(tour.TourId))
             {
                 tours[tour.TourId] = tour;
             }
@@ -108,8 +109,44 @@ namespace ApiIntegration
             {
                 throw new Exception($"Tour with TourId: {tour.TourId} does not exist");
             };
+        }
 
-            return Task.CompletedTask;
+        public async Task UpdateTourAvailabilityAsync(TourAvailability tourAvailability)
+        {
+            // Not sure what determines a unique tour but we'll assume it's start and duration
+            if (tourAvailability.TourId != default
+                && tours.ContainsKey(tourAvailability.TourId))
+            {
+                Tour tour = tours[tourAvailability.TourId];
+                if (tour.Availabilities
+                    .Where(x => x.StartDate == tourAvailability.StartDate
+                    && x.TourDuration == tourAvailability.TourDuration)
+                    .Count() == 0)
+                {
+                    tour.Availabilities.Add(tourAvailability);
+                }
+                // Update the tour as maybe price or availability has changed
+                // Ideally would update using ID rather than terrible logic
+                else
+                {
+                    var existingAvailability = tour.Availabilities
+                        .Where(x => x.StartDate == tourAvailability.StartDate
+                        && x.TourDuration == tourAvailability.TourDuration)
+                        .FirstOrDefault();
+
+                    if (existingAvailability != null)
+                    {
+                        existingAvailability.SellingPrice = tourAvailability.SellingPrice;
+                        existingAvailability.AvailabilityCount = tourAvailability.AvailabilityCount;
+                    }
+                }
+
+                tours[tour.TourId] = tour;
+            }
+            else
+            {
+                throw new Exception($"Tour with TourId: {tourAvailability.TourId} does not exist");
+            };
         }
     }
 }

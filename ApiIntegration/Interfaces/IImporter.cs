@@ -4,6 +4,6 @@ namespace ApiIntegration.Interfaces
 {
     public interface IImporter
     {
-        Task Execute(int providerId);
+        Task ExecuteAsync(int providerId);
     }
 }

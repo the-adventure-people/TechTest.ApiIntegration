@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ApiIntegration.Models
 {
@@ -12,5 +14,20 @@ namespace ApiIntegration.Models
         public int ReviewCount { get; set; }
         public bool Active { get; set; }
         public List<TourAvailability> Availabilities { get; set; }
+
+        public override bool Equals(Object obj)
+        {
+            //Check for null and compare run-time types.
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            }
+            else
+            {
+                Tour c = (Tour)obj;
+                return TourId == c.TourId && TourRef.Equals(c.TourRef) && ProviderId == c.ProviderId && TourName.Equals(c.TourName) && ReviewScore == c.ReviewScore && ReviewCount == c.ReviewCount
+                    && Active == c.Active && Availabilities.SequenceEqual(c.Availabilities);
+            }
+        }
     }
 }

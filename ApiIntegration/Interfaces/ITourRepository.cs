@@ -5,7 +5,7 @@ namespace ApiIntegration.Interfaces
 {
     public interface ITourRepository
     {
-        Task Update(Tour tour);
-        Task<Tour> Get(int providerId, string tourRef);
+        Task UpdateAsync(Tour tour);
+        Task<Tour> GetAsync(int providerId =default, string tourRef = default);
     }
 }

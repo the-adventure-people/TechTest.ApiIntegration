@@ -5,6 +5,6 @@ namespace ApiIntegration.Interfaces
 {
     public interface IProviderRepository
     {
-        Task<Provider> Get(int providerId);
+        Task<Provider> GetAsync(int providerId);
     }
 }

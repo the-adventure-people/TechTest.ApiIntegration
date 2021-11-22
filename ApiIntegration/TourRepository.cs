@@ -77,38 +77,23 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public Task<Tour> GetAsync(int tourId = default, string tourRef = default)
         {
-            Tour tour;
+            Tour tour = default;
             if (tourId != default && this.tours.ContainsKey(tourId))
-            {
                 tour = this.tours[tourId];
-            }
             else if (!string.IsNullOrWhiteSpace(tourRef))
-            {
                 tour = tours.Values
                     .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                tour = null;
-            }
-
             return Task.FromResult(tour);
         }
 
-        public Task Update(Tour tour)
+        public Task UpdateAsync(Tour tour)
         {
-            if (tour.TourId != default
-                    && tours.ContainsKey(tour.TourId))
-            {
+            if (tour.TourId != default && tours.ContainsKey(tour.TourId))
                 tours[tour.TourId] = tour;
-            }
             else
-            {
                 throw new Exception($"Tour with TourId: {tour.TourId} does not exist");
-            };
-
             return Task.CompletedTask;
         }
     }

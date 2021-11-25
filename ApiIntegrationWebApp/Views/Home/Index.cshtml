@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@using ApiIntegration.Models
+@model List<Tour>
+
+<div>
+    <p>Normally a job like this I would call from an API endpoint; but as the repository was in memory, rather than a database, 
+    I wanted to get a more immediate and visual feedback of the import having completed.</p>
+
+
+    <div class="text-center">
+        <h3 class="text-center">Click the button to begin the import</h3>
+
+        <form asp-action="Index" asp-controller="Home" formaction="post" class="mb-3">
+            ProviderId: <input type="text" id="ProviderId" name="ProviderId" value="1" />
+            <button type="submit">Begin</button>
+        </form>
+
+        @foreach (var tour in Model)
+        {
+            <div class="row mb-2">
+                <div class="col-12">
+                    <h5>@(tour.TourId): @tour.TourName @tour.TourRef</h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-3">
+                    <p>Start Date</p>
+                </div>
+                <div class="col-3">
+                    <p>Tour Duration</p>
+                </div>
+                <div class="col-3">
+                    <p>Selling Price</p>
+                </div>
+                <div class="col-3">
+                    <p>Availability Count</p>
+                </div>
+            </div>
+            @foreach (var avail in tour.Availabilities)
+            {
+                <div class="row">
+                    <div class="col-3">
+                        <p>@avail.StartDate.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@avail.TourDuration</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@avail.SellingPrice</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@avail.AvailabilityCount</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

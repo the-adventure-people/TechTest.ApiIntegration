@@ -1,6 +1,9 @@
 ﻿using ApiIntegration.Interfaces;
 using ApiIntegration.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ApiIntegration
@@ -33,6 +36,25 @@ namespace ApiIntegration
             }
 
             return Task.FromResult(provider);
+        }
+
+        public async Task<IEnumerable<Provider>> Get(Expression<Func<Provider, bool>> filter = null, Func<IQueryable<Provider>, IOrderedQueryable<Provider>> orderBy = null)
+        {
+            IQueryable<Provider> query = this.providers.Values.AsQueryable();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).AsEnumerable();
+            }
+            else
+            {
+                return query.AsEnumerable();
+            }
         }
     }
 }

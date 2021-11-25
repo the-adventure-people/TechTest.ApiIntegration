@@ -3,13 +3,14 @@ using ApiIntegration.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ApiIntegration
 {
     public class TourRepository : ITourRepository
     {
-        private readonly Dictionary<int, Tour> tours;
+        private Dictionary<int, Tour> tours;
 
         public TourRepository()
         {
@@ -77,7 +78,26 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public async Task<IEnumerable<Tour>> Get(Expression<Func<Tour, bool>> filter = null, Func<IQueryable<Tour>, IOrderedQueryable<Tour>> orderBy = null)
+        {
+            IQueryable<Tour> query = this.tours.Values.AsQueryable();
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                return orderBy(query).AsEnumerable();
+            }
+            else
+            {
+                return query.AsEnumerable();
+            }
+        }
+
+        public async Task<Tour> Get(int tourId, string tourRef)
         {
             Tour tour;
             if (tourId != default && this.tours.ContainsKey(tourId))
@@ -94,7 +114,7 @@ namespace ApiIntegration
                 tour = null;
             }
 
-            return Task.FromResult(tour);
+            return tour;
         }
 
         public Task Update(Tour tour)

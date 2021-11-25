@@ -1,10 +1,9 @@
-﻿using ApiIntegration.ProviderModels;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace ApiIntegration.Interfaces
 {
     public interface IApiDownloader
     {
-        Task<ApiAvailabilityResponse> Download();
+        Task<T> DownloadAsync<T>(string url) where T : class;
     }
 }

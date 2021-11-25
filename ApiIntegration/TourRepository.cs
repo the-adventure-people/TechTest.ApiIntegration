@@ -9,11 +9,11 @@ namespace ApiIntegration
 {
     public class TourRepository : ITourRepository
     {
-        private readonly Dictionary<int, Tour> tours;
+        private readonly Dictionary<int, Tour> _tours;
 
         public TourRepository()
         {
-            this.tours = new Dictionary<int, Tour>()
+            _tours = new Dictionary<int, Tour>()
             {
                 { 1, new Tour()
                     {
@@ -77,22 +77,20 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public Task<Tour> GetAsync(int tourId)
         {
-            Tour tour;
-            if (tourId != default && this.tours.ContainsKey(tourId))
-            {
-                tour = this.tours[tourId];
-            }
-            else if (!string.IsNullOrWhiteSpace(tourRef))
-            {
-                tour = tours.Values
-                    .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                tour = null;
-            }
+            var tour = tourId != default && _tours.ContainsKey(tourId)
+                ? _tours[tourId]
+                : null;
+
+            return Task.FromResult(tour);
+        }
+
+        public Task<Tour> GetAsync(string tourRef)
+        {
+            var tour = !string.IsNullOrWhiteSpace(tourRef)
+                ? _tours.Values.SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase))
+                : null;
 
             return Task.FromResult(tour);
         }
@@ -100,9 +98,9 @@ namespace ApiIntegration
         public Task Update(Tour tour)
         {
             if (tour.TourId != default
-                    && tours.ContainsKey(tour.TourId))
+                && _tours.ContainsKey(tour.TourId))
             {
-                tours[tour.TourId] = tour;
+                _tours[tour.TourId] = tour;
             }
             else
             {

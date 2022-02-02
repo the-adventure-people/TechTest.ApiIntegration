@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace ApiIntegration.Models
+﻿namespace ApiIntegration.Models
 {
+    using System.Collections.Generic;
+
     public class Tour
     {
         public int TourId { get; set; }

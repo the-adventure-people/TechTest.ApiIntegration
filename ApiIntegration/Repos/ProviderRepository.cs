@@ -1,18 +1,18 @@
-﻿using ApiIntegration.Interfaces;
-using ApiIntegration.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ApiIntegration
+﻿namespace ApiIntegration.Repos
 {
+    using ApiIntegration.Interfaces;
+    using ApiIntegration.Models;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     public class ProviderRepository : IProviderRepository
     {
-        private readonly Dictionary<int, Provider> providers;
+        private readonly Dictionary<int, Provider> _providers;
 
 
         public ProviderRepository()
         {
-            this.providers = new Dictionary<int, Provider>()
+            _providers = new Dictionary<int, Provider>()
             {
                 { 1, new Provider()
                     {
@@ -27,7 +27,7 @@ namespace ApiIntegration
         public Task<Provider> Get(int providerId)
         {
             Provider provider;
-            if (!this.providers.TryGetValue(providerId, out provider))
+            if (!_providers.TryGetValue(providerId, out provider))
             {
                 provider = null;
             }

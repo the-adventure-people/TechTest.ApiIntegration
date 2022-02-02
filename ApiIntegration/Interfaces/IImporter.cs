@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-
-namespace ApiIntegration.Interfaces
+﻿namespace ApiIntegration.Interfaces
 {
+    using System.Threading.Tasks;
+
     public interface IImporter
     {
-        Task Execute(int providerId);
+        Task ExecuteAsync(int providerId);
     }
 }

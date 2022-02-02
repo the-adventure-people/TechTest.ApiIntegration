@@ -1,19 +1,19 @@
-﻿using ApiIntegration.Interfaces;
-using ApiIntegration.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ApiIntegration
+﻿namespace ApiIntegration.Repos
 {
+    using ApiIntegration.Interfaces;
+    using ApiIntegration.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class TourRepository : ITourRepository
     {
-        private readonly Dictionary<int, Tour> tours;
+        private readonly Dictionary<int, Tour> _tours;
 
         public TourRepository()
         {
-            this.tours = new Dictionary<int, Tour>()
+            _tours = new Dictionary<int, Tour>()
             {
                 { 1, new Tour()
                     {
@@ -80,13 +80,13 @@ namespace ApiIntegration
         public Task<Tour> Get(int tourId, string tourRef)
         {
             Tour tour;
-            if (tourId != default && this.tours.ContainsKey(tourId))
+            if (tourId != default && _tours.ContainsKey(tourId))
             {
-                tour = this.tours[tourId];
+                tour = _tours[tourId];
             }
             else if (!string.IsNullOrWhiteSpace(tourRef))
             {
-                tour = tours.Values
+                tour = _tours.Values
                     .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
             }
             else
@@ -100,9 +100,9 @@ namespace ApiIntegration
         public Task Update(Tour tour)
         {
             if (tour.TourId != default
-                    && tours.ContainsKey(tour.TourId))
+                    && _tours.ContainsKey(tour.TourId))
             {
-                tours[tour.TourId] = tour;
+                _tours[tour.TourId] = tour;
             }
             else
             {

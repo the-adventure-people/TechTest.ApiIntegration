@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace ApiIntegration.Models
+﻿namespace ApiIntegration.Models
 {
+    using System;
+
     public class TourAvailability
     {
         public int TourId { get; set; }

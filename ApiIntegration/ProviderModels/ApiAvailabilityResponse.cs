@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace ApiIntegration.ProviderModels
+﻿namespace ApiIntegration.ProviderModels
 {
+    using System.Collections.Generic;
+
     public class ApiAvailabilityResponse
     {
         public int StatusCode { get; set; }
-        public List<Availability> Body { get; set; }
+        public IList<Availability> Body { get; set; }
     }
 }

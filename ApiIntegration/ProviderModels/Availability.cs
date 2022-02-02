@@ -11,5 +11,14 @@ namespace ApiIntegration.ProviderModels
         public decimal Price { get; set; }
         public int Spaces { get; set; }
 
+        public TourAvailability ToTourAvailability(){
+            return new TourAvailability {
+                SellingPrice = Price,
+                AvailabilityCount = Spaces,
+                TourDuration = Nights,
+                StartDate = DateTime.Parse(DepartureDate)
+            };
+        }
+
     }
 }

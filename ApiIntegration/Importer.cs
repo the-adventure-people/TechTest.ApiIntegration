@@ -19,8 +19,6 @@ namespace ApiIntegration
         private ILogger<Importer> Logger { get; }
         private IPriceHandler PriceHandler { get; }
 
-        public const decimal SITE_DISCOUNT = 0.05M;
-
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
@@ -34,23 +32,16 @@ namespace ApiIntegration
             Logger = logger;
             PriceHandler = priceHandler;
         }
-
-        /// <summary>
-        /// Adjusts the price for available tours
-        /// </summary>
-        /// <param name="providerId"></param>
-        /// <returns></returns>
-        public async Task Execute(int providerId, decimal discount)
+        public async Task Execute(int providerId)
         {
             Logger.LogInformation("Download Started");
 
             ApiAvailabilityResponse toursResponse;
-
             try {
                 toursResponse = await ApiDownloader.Download().ConfigureAwait(false);
             }
             catch (HttpRequestException exception) {
-                Logger.LogError(exception, $"Failed to get tours response");
+                Logger.LogError(exception, $"An error occured during the request.");
                 throw;
             }
             catch (Exception exception) {
@@ -59,38 +50,36 @@ namespace ApiIntegration
             }
             Logger.LogInformation("Download Finished");
 
-            var tours = await GetTours(providerId, toursResponse);
+            Logger.LogInformation("Calculating discount...");
+            var tours = toursResponse.Body;
+            var provider = await ProviderRepository.Get(providerId).ConfigureAwait(false);
+            CalculateNewPrice(provider, tours);
 
-            //Logger.LogInformation($"Tours before update: {JsonConvert.SerializeObject(tours, Formatting.Indented)}\n");
+            Logger.LogInformation("Mapping to DB entity models...");
+            var dbEntityToursDict = MapModels(tours);
 
-            foreach (var tour in tours){
-                foreach(var availability in tour.Availabilities){
-                    var provider = await ProviderRepository.Get(tour.ProviderId);
-                    var newPrice = PriceHandler.GetPrice(availability.SellingPrice, provider.Commission, discount);
-                    availability.SellingPrice = newPrice;
+            Logger.LogInformation("Adding To Database...");
+            foreach (var entityGroupings in dbEntityToursDict) {
+                foreach(var entity in entityGroupings){
+                    await TourRepository.AddTourAvailability(entity, entityGroupings.Key);
                 }
-                await TourRepository.UpdateTourAvailability(tour.ProviderId, tour.TourId, tour.Availabilities);
             }
 
-            tours = await GetTours(providerId, toursResponse);
+            var allTours = await TourRepository.GetAll();
+            Logger.LogInformation($"Tours after update: {JsonConvert.SerializeObject(allTours, Formatting.Indented)}");
 
-            Logger.LogInformation($"Tours after update: {JsonConvert.SerializeObject(tours, Formatting.Indented)}");
-
-            Logger.LogInformation("Finished updating price for tours");
+            Logger.LogInformation("Finished adding new tours");
 
         }
 
-        private async Task<List<Tour>> GetTours(int providerId, ApiAvailabilityResponse apiAvailabilityResponse){
-            var tours = new List<Tour>();
+        private IEnumerable<IGrouping<string, TourAvailability>> MapModels(List<Availability> availabilities){
+            return availabilities.GroupBy(x => x.ProductCode, y => y.ToTourAvailability());
+        }
 
-            var productCodes = apiAvailabilityResponse.Body.Select(t => t.ProductCode).Distinct();
-            foreach (var code in productCodes) {
-                var tour = await TourRepository.Get(providerId, code);
-                if (tour != null){
-                    tours.Add(tour);
-                }
+        private void CalculateNewPrice(Provider provider, List<Availability> tours){ 
+            foreach(var t in tours){
+                t.Price = PriceHandler.GetPrice(t.Price, provider.Commission);
             }
-            return tours;
         }
     }
 }

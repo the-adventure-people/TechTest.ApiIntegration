@@ -15,11 +15,11 @@ namespace ApiIntegration.ConsoleRunner {
         public static void Setup() {
             var serviceCollection = new ServiceCollection();
 
-            serviceCollection.AddSingleton<ITourRepository>(s => new TourRepository ());
             serviceCollection.AddSingleton<IApiDownloader, ApiDownloader>();
             serviceCollection.AddSingleton<IApiDownloaderClient>(s => new ApiDownloaderClient(new System.Net.Http.HttpClient(), "http://tap.techtest.s3-website.eu-west-2.amazonaws.com/"));
             serviceCollection.AddSingleton<IImporter, Importer>();
-            serviceCollection.AddSingleton<IPriceHandler, PriceHandler>();
+            serviceCollection.AddSingleton<IPriceHandler, SalePriceHandler>();
+            serviceCollection.AddSingleton<ITourRepository>(s => new TourRepository());
             serviceCollection.AddSingleton<IProviderRepository, ProviderRepository>();
 
             serviceCollection.AddLogging(e => e.AddConsole());
@@ -30,7 +30,7 @@ namespace ApiIntegration.ConsoleRunner {
             Setup();
 
             var importer = ServiceProvider.GetService<IImporter>();
-            importer.Execute(1, 0.05M).GetAwaiter().GetResult();
+            importer.Execute(1).GetAwaiter().GetResult();
         }
     }
 }

@@ -12,11 +12,6 @@ namespace ApiIntegration
     {
         private readonly Dictionary<int, Tour> tours;
 
-        public ILogger<TourRepository> Logger { get; }
-
-        public TourRepository(Microsoft.Extensions.Logging.ILogger<TourRepository> logger) {
-            Logger = logger;
-        }
         public TourRepository()
         {
             this.tours = new Dictionary<int, Tour>() //
@@ -83,16 +78,25 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int providerId, string tourRef)
-        {
-            Tour tour = null;
-            if (providerId != default && this.tours.ContainsKey(providerId))
-            {
-                if (tours[providerId].TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase)){
-                    tour = this.tours[providerId];
-                }
+        public Task<Tour> GetByTourId(int tourId) {
+            Tour tour;
+            if (tourId != default && this.tours.ContainsKey(tourId)) {
+                tour = this.tours[tourId];
+            } else {
+                tour = null;
             }
 
+            return Task.FromResult(tour);
+        }
+
+        public Task<Tour> GetByTourRef(string tourRef){
+            Tour tour;
+            if (!string.IsNullOrWhiteSpace(tourRef)) {
+                tour = tours.Values
+                    .SingleOrDefault(t => t.TourRef.Equals(tourRef, StringComparison.OrdinalIgnoreCase));
+            } else {
+                tour = null;
+            }
             return Task.FromResult(tour);
         }
 
@@ -110,25 +114,17 @@ namespace ApiIntegration
 
             return Task.CompletedTask;
         }
+        public async Task<List<Tour>> GetAll(){
+            return tours.Values.ToList();
+        }
+        public async Task AddTourAvailability(TourAvailability tourAvailability, string tourRef) {
+            var tour = await GetByTourRef(tourRef);
 
-        //in a real scenario i would expect touravailability to have a primary key that I can use to update the selling price 
-        //instead of just updating the list
-        public Task UpdateTourAvailability(int providerId, int tourId, List<TourAvailability> tourAvailabilities) {
-
-            if (tours.ContainsKey(providerId)) {
-                var tour = tours[providerId];
-
-                //provider id is the same as tour ID here, i would assume one provider should have multiple tours possible
-                if (tour.TourId == tourId){
-                    tour.Availabilities = tourAvailabilities;
-                }
-
-            } else {
-                Logger.LogError($"Failed to find tour by Id {providerId}"); //throw exception here in real scenario
+            if (tour != null){
+                tourAvailability.TourId = tour.TourId;
+                tours[tour.TourId].Availabilities.Add(tourAvailability);
             }
 
-            return Task.CompletedTask;
         }
-
     }
 }

@@ -14,8 +14,8 @@ namespace ApiIntegration.UnitTests {
         public void TestDiscountCorrectlyApplied() {
             var logger = new Mock<ILogger<PriceHandler>>();
             var priceHandler = new PriceHandler(logger.Object);
-            var result = priceHandler.GetPrice(200, 5, 0.1M);
-            Assert.AreEqual(185, result);
+            var result = priceHandler.GetPrice(200, 0.1M, 0.5M);
+            Assert.AreEqual(120, result);
         }
 
         [Test]

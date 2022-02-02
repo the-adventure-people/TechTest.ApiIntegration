@@ -1,48 +1,96 @@
 ﻿using ApiIntegration.Interfaces;
+using ApiIntegration.Models;
+using ApiIntegration.ProviderModels;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ApiIntegration
 {
     public class Importer : IImporter
     {
-        private readonly ITourRepository tourRepository;
-        private readonly IProviderRepository providerRepository;
-        private readonly IApiDownloader apiDownloader;
-        private readonly ILogger logger;
+        private ITourRepository TourRepository { get; }
+        private IProviderRepository ProviderRepository { get; }
+        private IApiDownloader ApiDownloader { get; }
+        private ILogger<Importer> Logger { get; }
+        private IPriceHandler PriceHandler { get; }
+
+        public const decimal SITE_DISCOUNT = 0.05M;
 
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
             IApiDownloader apiDownloader, 
-            ILogger logger)
+            ILogger<Importer> logger,
+            IPriceHandler priceHandler)
         {
-            this.tourRepository = tourRepository;
-            this.providerRepository = providerRepository;
-            this.apiDownloader = apiDownloader;
-            this.logger = logger;
+            TourRepository = tourRepository;
+            ProviderRepository = providerRepository;
+            ApiDownloader = apiDownloader;
+            Logger = logger;
+            PriceHandler = priceHandler;
         }
 
-
-        public async Task Execute(int providerId)
+        /// <summary>
+        /// Adjusts the price for available tours
+        /// </summary>
+        /// <param name="providerId"></param>
+        /// <returns></returns>
+        public async Task Execute(int providerId, decimal discount)
         {
-            logger.LogInformation("Download Started");
+            Logger.LogInformation("Download Started");
 
-            var providerResponse = await apiDownloader.Download();
+            ApiAvailabilityResponse toursResponse;
 
-            // Transform provider model to our model
+            try {
+                toursResponse = await ApiDownloader.Download().ConfigureAwait(false);
+            }
+            catch (HttpRequestException exception) {
+                Logger.LogError(exception, $"Failed to get tours response");
+                throw;
+            }
+            catch (Exception exception) {
+                Logger.LogError(exception, "An error has occured");
+                throw;
+            }
+            Logger.LogInformation("Download Finished");
 
-            // Adjust prices
+            var tours = await GetTours(providerId, toursResponse);
 
-            // Save to repositories
+            //Logger.LogInformation($"Tours before update: {JsonConvert.SerializeObject(tours, Formatting.Indented)}\n");
 
-            logger.LogInformation("Download Finished");
+            foreach (var tour in tours){
+                foreach(var availability in tour.Availabilities){
+                    var provider = await ProviderRepository.Get(tour.ProviderId);
+                    var newPrice = PriceHandler.GetPrice(availability.SellingPrice, provider.Commission, discount);
+                    availability.SellingPrice = newPrice;
+                }
+                await TourRepository.UpdateTourAvailability(tour.ProviderId, tour.TourId, tour.Availabilities);
+            }
+
+            tours = await GetTours(providerId, toursResponse);
+
+            Logger.LogInformation($"Tours after update: {JsonConvert.SerializeObject(tours, Formatting.Indented)}");
+
+            Logger.LogInformation("Finished updating price for tours");
+
         }
 
-        private async Task<decimal> AdjustPrice(decimal price)
-        {
-            throw new NotImplementedException();
+        private async Task<List<Tour>> GetTours(int providerId, ApiAvailabilityResponse apiAvailabilityResponse){
+            var tours = new List<Tour>();
+
+            var productCodes = apiAvailabilityResponse.Body.Select(t => t.ProductCode).Distinct();
+            foreach (var code in productCodes) {
+                var tour = await TourRepository.Get(providerId, code);
+                if (tour != null){
+                    tours.Add(tour);
+                }
+            }
+            return tours;
         }
     }
 }

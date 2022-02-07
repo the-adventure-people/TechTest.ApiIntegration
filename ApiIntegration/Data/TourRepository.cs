@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiIntegration
+namespace ApiIntegration.Data
 {
     public class TourRepository : ITourRepository
     {
@@ -13,7 +13,7 @@ namespace ApiIntegration
 
         public TourRepository()
         {
-            this.tours = new Dictionary<int, Tour>()
+            tours = new Dictionary<int, Tour>()
             {
                 { 1, new Tour()
                     {
@@ -80,9 +80,9 @@ namespace ApiIntegration
         public Task<Tour> Get(int tourId, string tourRef)
         {
             Tour tour;
-            if (tourId != default && this.tours.ContainsKey(tourId))
+            if (tourId != default && tours.ContainsKey(tourId))
             {
-                tour = this.tours[tourId];
+                tour = tours[tourId];
             }
             else if (!string.IsNullOrWhiteSpace(tourRef))
             {

@@ -3,7 +3,7 @@ using ApiIntegration.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ApiIntegration
+namespace ApiIntegration.Data
 {
     public class ProviderRepository : IProviderRepository
     {
@@ -12,7 +12,7 @@ namespace ApiIntegration
 
         public ProviderRepository()
         {
-            this.providers = new Dictionary<int, Provider>()
+            providers = new Dictionary<int, Provider>()
             {
                 { 1, new Provider()
                     {
@@ -27,7 +27,7 @@ namespace ApiIntegration
         public Task<Provider> Get(int providerId)
         {
             Provider provider;
-            if (!this.providers.TryGetValue(providerId, out provider))
+            if (!providers.TryGetValue(providerId, out provider))
             {
                 provider = null;
             }

@@ -1,6 +1,10 @@
 ﻿using ApiIntegration.Interfaces;
+using ApiIntegration.Models;
+using ApiIntegration.ProviderModels;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiIntegration.Services
@@ -15,7 +19,7 @@ namespace ApiIntegration.Services
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
-            IApiDownloader apiDownloader, 
+            IApiDownloader apiDownloader,
             ILogger logger)
         {
             this.tourRepository = tourRepository;
@@ -29,15 +33,36 @@ namespace ApiIntegration.Services
         {
             logger.LogInformation("Download Started");
 
+            // Download
             var providerResponse = await apiDownloader.Download();
+
+            // Handle downloaded data
+            await ImportAvailabilities(new ImportAvailabilitiesRequest
+            {
+                Availabilities = providerResponse.Body,
+                ProviderId = providerId
+            });
+
+            logger.LogInformation("Download Finished");
+        }
+
+
+        private async Task ImportAvailabilities(ImportAvailabilitiesRequest req)
+        {
+            if (req.Availabilities == null || !req.Availabilities.Any())
+                return;
+            var provider = await providerRepository.Get(req.ProviderId);
+
+            foreach (var item in req.Availabilities)
+            {
+
+            }
 
             // Transform provider model to our model
 
             // Adjust prices
 
             // Save to repositories
-
-            logger.LogInformation("Download Finished");
         }
     }
 }

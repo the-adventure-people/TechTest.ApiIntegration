@@ -39,10 +39,5 @@ namespace ApiIntegration.Services
 
             logger.LogInformation("Download Finished");
         }
-
-        private async Task<decimal> AdjustPrice(decimal price)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

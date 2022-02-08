@@ -1,0 +1,43 @@
+﻿@model ApiIntegrationWebApp.Models.IndexViewModel;
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <h1>Api Integration Web App</h1>
+
+    <figure>
+        <h2>Tours</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>TourName</th>
+                    <th>TourRef</th>
+                    <th>Active</th>
+                    <th>ProviderId</th>
+                    <th>ReviewCount</th>
+                    <th>ReviewScore</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Tours != null && Model.Tours.Any())
+                {
+                    @foreach (var item in Model.Tours)
+                    {
+                        <tr>
+                            <td>@item.TourId</td>
+                            <td>@item.TourName</td>
+                            <td>@item.TourRef</td>
+                            <td>@item.Active</td>
+                            <td>@item.ProviderId</td>
+                            <td>@item.ReviewCount</td>
+                            <td>@item.ReviewScore</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </figure>
+</div>

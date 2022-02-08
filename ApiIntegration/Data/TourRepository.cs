@@ -97,6 +97,13 @@ namespace ApiIntegration.Data
             return Task.FromResult(tour);
         }
 
+        public Task<List<Tour>> GetAll()
+        {
+            var response = tours.Select(t => t.Value).ToList();
+
+            return Task.FromResult(response);
+        }
+
         public Task Update(Tour tour)
         {
             if (tour.TourId != default

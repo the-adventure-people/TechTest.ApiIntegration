@@ -1,4 +1,5 @@
 ﻿using ApiIntegration.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiIntegration.Interfaces
@@ -14,5 +15,10 @@ namespace ApiIntegration.Interfaces
         /// Get a tour from the repository.
         /// </summary>
         Task<Tour> Get(int providerId, string tourRef);
+
+        /// <summary>
+        /// Get all tours from the repository.
+        /// </summary>
+        Task<List<Tour>> GetAll();
     }
 }

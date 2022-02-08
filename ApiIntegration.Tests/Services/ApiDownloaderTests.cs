@@ -40,7 +40,7 @@ namespace ApiIntegration.Tests.Services
         }
 
         [Test]
-        public async Task Download_Fail_InvalidJson()
+        public void Download_Fail_InvalidJson()
         {
             // Arrange
             mockHttpHandler.Setup(m => m.GetBodyAsync()).ReturnsAsync(TestData.AvailabilityApi.IncorrectBody);

@@ -6,6 +6,20 @@
 
 <div class="container">
     <h1>Api Integration Web App</h1>
+    <p>Tours are listed below. Please use the form to import and update tour availabilties.</p>
+
+    <article>
+        <form method="post">
+            <div class="grid">
+                <label for="providerId">
+                    Provider Id
+                    <input type="number" id="providerId" name="providerId" placeholder="Provider Id" required="" value="1">
+                </label>
+            </div>
+            <button type="submit" id="submitBtn" name="submitBtn" value="submit">Submit</button>
+
+        </form>
+    </article>
 
     <figure>
         <h2>Tours</h2>
@@ -41,3 +55,5 @@
         </table>
     </figure>
 </div>
+
+

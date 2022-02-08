@@ -1,5 +1,6 @@
 using ApiIntegration.Data;
 using ApiIntegration.Interfaces;
+using ApiIntegration.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages()
     .AddRazorRuntimeCompilation();
 
-builder.Services.AddScoped<ITourRepository, TourRepository>();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+builder.Services.AddScoped<IImporter, Importer>();
+builder.Services.AddSingleton<IApiDownloader, ApiDownloader>();
+builder.Services.AddSingleton<IApiDownloaderHttpHandler, ApiDownloaderHttpHandler>();
+builder.Services.AddSingleton<ITourRepository, TourRepository>();
+builder.Services.AddSingleton<IProviderRepository, ProviderRepository>();
+
 
 var app = builder.Build();
 

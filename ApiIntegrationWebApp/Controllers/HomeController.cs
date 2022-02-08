@@ -8,9 +8,13 @@ namespace ApiIntegrationWebApp.Controllers
     public class HomeController : Controller
     {
         private readonly ITourRepository tourRepository;
-        public HomeController(ITourRepository tourRepository)
+        private readonly IImporter importer;
+
+        public HomeController(ITourRepository tourRepository,
+            IImporter importer)
         {
             this.tourRepository = tourRepository;
+            this.importer = importer;
         }
 
         [HttpGet]
@@ -22,8 +26,14 @@ namespace ApiIntegrationWebApp.Controllers
 
         [HttpPost]
         [ActionName("Index")]
-        public ActionResult IndexPost()
+        public async Task<ActionResult> IndexPost(IndexViewModel viewModel)
         {
+            if (!string.IsNullOrWhiteSpace(viewModel.SubmitBtn) 
+                && viewModel.SubmitBtn == "submit")
+            {
+                await importer.Execute(viewModel.ProviderId);
+            }
+
             return View();
         }
 

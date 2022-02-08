@@ -4,13 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ApiIntegrationWebApp</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/pico/pico.slim.min.css" />
+    <link rel="stylesheet" href="~/lib/pico/pico.min.css" />
 </head>
 <body>
     <main role="main">
         @RenderBody()
     </main>
     @await RenderSectionAsync("Scripts", required: false)
+    <style>
+        article{
+            max-width: 400px;
+            margin: auto;
+            padding: 30px 27px;
+        }
+    </style>
 </body>
 </html>

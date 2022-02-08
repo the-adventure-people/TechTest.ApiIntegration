@@ -16,7 +16,7 @@ namespace ApiIntegration.Services
         #endregion
 
         private static readonly HttpClient httpClient;
-        private readonly ILogger<ApiDownloader> logger;
+        private readonly ILogger<ApiDownloaderHttpHandler> logger;
         private readonly IConfiguration configuration;
 
         static ApiDownloaderHttpHandler()
@@ -24,7 +24,7 @@ namespace ApiIntegration.Services
             httpClient = new HttpClient();
         }
 
-        public ApiDownloaderHttpHandler(ILogger<ApiDownloader> logger,
+        public ApiDownloaderHttpHandler(ILogger<ApiDownloaderHttpHandler> logger,
             IConfiguration configuration)
         {
             this.logger = logger;

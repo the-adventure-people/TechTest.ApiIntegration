@@ -8,5 +8,6 @@ namespace ApiIntegrationWebApp.Models
 
         // Postback
         public string SubmitBtn { get; set; }
+        public int ProviderId { get; set; }
     }
 }

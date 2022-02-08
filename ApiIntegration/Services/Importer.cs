@@ -14,13 +14,13 @@ namespace ApiIntegration.Services
         private readonly ITourRepository tourRepository;
         private readonly IProviderRepository providerRepository;
         private readonly IApiDownloader apiDownloader;
-        private readonly ILogger logger;
+        private readonly ILogger<Importer> logger;
 
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
             IApiDownloader apiDownloader,
-            ILogger logger)
+            ILogger<Importer> logger)
         {
             this.tourRepository = tourRepository;
             this.providerRepository = providerRepository;
@@ -49,6 +49,8 @@ namespace ApiIntegration.Services
 
         private async Task ImportAvailabilities(ImportAvailabilitiesRequest req)
         {
+            logger.LogInformation("Download complete. Importing to repositories.");
+
             if (req.Availabilities == null || !req.Availabilities.Any())
                 return;
             var provider = await providerRepository.Get(req.ProviderId);

@@ -21,39 +21,45 @@
         </form>
     </article>
 
-    <figure>
-        <h2>Tours</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>TourName</th>
-                    <th>TourRef</th>
-                    <th>Active</th>
-                    <th>ProviderId</th>
-                    <th>ReviewCount</th>
-                    <th>ReviewScore</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Tours != null && Model.Tours.Any())
+    <div>
+        <h2>Tours & availability</h2>
+
+
+        <figure>
+            @if (Model.Tours != null && Model.Tours.Any())
+            {
+                @foreach (var tour in Model.Tours)
                 {
-                    @foreach (var item in Model.Tours)
-                    {
-                        <tr>
-                            <td>@item.TourId</td>
-                            <td>@item.TourName</td>
-                            <td>@item.TourRef</td>
-                            <td>@item.Active</td>
-                            <td>@item.ProviderId</td>
-                            <td>@item.ReviewCount</td>
-                            <td>@item.ReviewScore</td>
-                        </tr>
-                    }
+                    <h4>@tour.TourName</h4>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Start date</th>
+                                <th>Nights</th>
+                                <th>Availability</th>
+                                <th>Selling Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var avail in tour.Availabilities)
+                            {
+                                <tr>
+                                    <td>@avail.StartDate.ToShortDateString()</td>
+                                    <td>@avail.TourDuration</td>
+                                    <td>@avail.AvailabilityCount</td>
+                                    <td>£ @avail.SellingPrice</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
                 }
-            </tbody>
-        </table>
-    </figure>
+            }
+        </figure>
+    </div>
+
 </div>
 
 

@@ -97,6 +97,23 @@ namespace ApiIntegration.Data
             return Task.FromResult(tour);
         }
 
+        public Task<List<Tour>> GetByProider(int providerId)
+        {
+            List<Tour> result;
+            if (providerId != default)
+            {
+                result = tours.Where(t => t.Value.ProviderId == providerId)
+                    .Select(t => t.Value)
+                    .ToList();
+            }
+            else
+            {
+                result = null;
+            }
+
+            return Task.FromResult(result);
+        }
+
         public Task<List<Tour>> GetAll()
         {
             var response = tours.Select(t => t.Value).ToList();

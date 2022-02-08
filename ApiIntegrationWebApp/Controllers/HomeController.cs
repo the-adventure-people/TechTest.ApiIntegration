@@ -34,7 +34,7 @@ namespace ApiIntegrationWebApp.Controllers
                 await importer.Execute(viewModel.ProviderId);
             }
 
-            return View();
+            return Redirect("/");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

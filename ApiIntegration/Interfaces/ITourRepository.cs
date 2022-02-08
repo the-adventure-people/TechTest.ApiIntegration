@@ -14,7 +14,12 @@ namespace ApiIntegration.Interfaces
         /// <summary>
         /// Get a tour from the repository.
         /// </summary>
-        Task<Tour> Get(int providerId, string tourRef);
+        Task<Tour> Get(int tourId, string tourRef);
+
+        /// <summary>
+        /// Get all tours related to a provider.
+        /// </summary>
+        Task<List<Tour>> GetByProider(int providerId);
 
         /// <summary>
         /// Get all tours from the repository.

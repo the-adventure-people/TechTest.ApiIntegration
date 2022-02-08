@@ -37,7 +37,7 @@ namespace ApiIntegration.Services
             var provider = await GetProvider(providerId);
             if (provider == null)
             {
-                logger.LogInformation("Provider not found. Cancelling.");
+                logger.LogError($"Provider not found by ID {providerId}. Cancelling.");
                 return;
             }
 
@@ -54,9 +54,15 @@ namespace ApiIntegration.Services
             logger.LogInformation("Download Finished");
         }
 
+
         private async Task<Provider> GetProvider(int providerId)
         {
             return await providerRepository.Get(providerId);
+        }
+
+        private async Task<Tour> GetTour(int providerId, string productCode)
+        {
+            return await tourRepository.Get(providerId, productCode);
         }
 
         private async Task ImportAvailabilities(ImportAvailabilitiesRequest req)
@@ -68,7 +74,14 @@ namespace ApiIntegration.Services
 
             foreach (var item in req.Availabilities)
             {
+                var tour = await GetTour(req.Provider.ProviderId, item.ProductCode);
+                if (tour == null)
+                {
+                    logger.LogError($"Could not find tour by id {req.Provider.ProviderId} and code {item.ProductCode}. Skipping item.");
+                    continue;
+                }
 
+                await UpdateTourAvailabilities(tour, item);
             }
 
             // Transform provider model to our model
@@ -79,5 +92,11 @@ namespace ApiIntegration.Services
         }
 
 
+        private async Task UpdateTourAvailabilities(Tour tour, List<TourAvailability> availabilities)
+        {
+            var tourAvailabilities = new List<TourAvailability>();
+
+            await tourRepository.Update(tour);
+        }
     }
 }

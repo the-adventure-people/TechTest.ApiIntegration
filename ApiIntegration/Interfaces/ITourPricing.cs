@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ApiIntegration.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ApiIntegration.Interfaces
 {
-    internal interface ITourPricing
+    public interface ITourPricing
     {
+        decimal CalculateWebsitePrice(CalculateWebsitePriceRequest request);
     }
 }

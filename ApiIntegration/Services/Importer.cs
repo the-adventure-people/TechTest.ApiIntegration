@@ -15,17 +15,20 @@ namespace ApiIntegration.Services
         private readonly ITourRepository tourRepository;
         private readonly IProviderRepository providerRepository;
         private readonly IApiDownloader apiDownloader;
+        private readonly ITourPricing tourPricing;
         private readonly ILogger<Importer> logger;
 
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
             IApiDownloader apiDownloader,
+            ITourPricing tourPricing,
             ILogger<Importer> logger)
         {
             this.tourRepository = tourRepository;
             this.providerRepository = providerRepository;
             this.apiDownloader = apiDownloader;
+            this.tourPricing = tourPricing;
             this.logger = logger;
         }
 
@@ -68,32 +71,42 @@ namespace ApiIntegration.Services
 
             foreach (var tour in tours)
             {
-                await UpdateTourAvailabilities(tour, req.Availabilities.Where(a => a.ProductCode == tour.TourRef).ToList());
+                await UpdateTourAvailabilities(new UpdateTourAvailabilitiesRequest
+                {
+                    Tour = tour,
+                    Availabilities = req.Availabilities.Where(a => a.ProductCode == tour.TourRef).ToList(),
+                    Provider = req.Provider
+                });
             }
         }
 
 
 
 
-        private async Task UpdateTourAvailabilities(Tour tour, List<Availability> availabilities)
+        private async Task UpdateTourAvailabilities(UpdateTourAvailabilitiesRequest req)
         {
             var tourAvailabilities = new List<TourAvailability>();
 
-            foreach (var item in availabilities)
+            foreach (var item in req.Availabilities)
             {
                 DateTime.TryParseExact(item.DepartureDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime departureDate);
 
-                // TODO Adjust prices
+                // Find the price that should be saved
+                decimal price = tourPricing.CalculateWebsitePrice(new CalculateWebsitePriceRequest
+                {
+                    ProviderPrice = item.Price,
+                    ComissionPercentage = req.Provider.Commission
+                });
 
                 // Transform provider model to our model
-                var existingAvailability = tour.Availabilities.SingleOrDefault(a => a.StartDate.Date == departureDate.Date);
+                var existingAvailability = req.Tour.Availabilities.SingleOrDefault(a => a.StartDate.Date == departureDate.Date);
                 if (existingAvailability == null)
                 {
-                    tour.Availabilities.Add(new TourAvailability
+                    req.Tour.Availabilities.Add(new TourAvailability
                     {
-                        TourId = tour.TourId,
+                        TourId = req.Tour.TourId,
                         AvailabilityCount = item.Spaces,
-                        SellingPrice = item.Price,
+                        SellingPrice = price,
                         StartDate = departureDate,
                         TourDuration = item.Nights
                     });
@@ -101,14 +114,14 @@ namespace ApiIntegration.Services
                 else
                 {
                     existingAvailability.AvailabilityCount = item.Spaces;
-                    existingAvailability.SellingPrice = item.Price; 
+                    existingAvailability.SellingPrice = price;
                     existingAvailability.StartDate = departureDate;
                     existingAvailability.TourDuration = item.Nights;
                 }
             }
 
             // Save to repositories
-            await tourRepository.Update(tour);
+            await tourRepository.Update(req.Tour);
         }
 
 
@@ -127,24 +140,3 @@ namespace ApiIntegration.Services
         #endregion
     }
 }
-
-// Transform provider model to our model
-
-// Adjust prices
-
-// Save to repositories
-
-
-/*
-foreach (var item in req.Availabilities)
-{
-    var tour = await GetTour(req.Provider.ProviderId, item.ProductCode);
-    if (tour == null)
-    {
-        logger.LogError($"Could not find tour by id {req.Provider.ProviderId} and code {item.ProductCode}. Skipping item.");
-        continue;
-    }
-
-    await UpdateTourAvailabilities(tour, item);
-}
-*/

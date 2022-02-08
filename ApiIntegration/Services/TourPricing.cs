@@ -1,4 +1,6 @@
 ﻿using ApiIntegration.Interfaces;
+using ApiIntegration.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,16 +8,27 @@ using System.Threading.Tasks;
 
 namespace ApiIntegration.Services
 {
-    internal class TourPricing : ITourPricing
+    public class TourPricing : ITourPricing
     {
-        public TourPricing()
-        {
+        #region Static values
+        private readonly string DiscountConfigKey = "PricingDiscount";
+        #endregion
 
+        private readonly decimal PricingDiscountPercentage;
+
+        public TourPricing(IConfiguration configuration)
+        {
+            PricingDiscountPercentage = Convert.ToInt32(configuration[DiscountConfigKey]);
         }
 
-        private async Task<decimal> AdjustPrice(decimal price)
+        public decimal CalculateWebsitePrice(CalculateWebsitePriceRequest req)
         {
-            throw new NotImplementedException();
+            var comission = req.ComissionPercentage * req.ProviderPrice;
+            var discount = (req.ProviderPrice * PricingDiscountPercentage / 100);
+            var price = req.ProviderPrice + comission - discount;
+
+            return price;
         }
+
     }
 }

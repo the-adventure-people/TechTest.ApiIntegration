@@ -14,6 +14,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddScoped<IImporter, Importer>();
+builder.Services.AddScoped<ITourPricing, TourPricing>();
 builder.Services.AddSingleton<IApiDownloader, ApiDownloader>();
 builder.Services.AddSingleton<IApiDownloaderHttpHandler, ApiDownloaderHttpHandler>();
 builder.Services.AddSingleton<ITourRepository, TourRepository>();

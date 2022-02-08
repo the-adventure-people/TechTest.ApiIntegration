@@ -33,6 +33,14 @@ namespace ApiIntegration.Services
         {
             logger.LogInformation("Download Started");
 
+            // Get provider
+            var provider = await GetProvider(providerId);
+            if (provider == null)
+            {
+                logger.LogInformation("Provider not found. Cancelling.");
+                return;
+            }
+
             // Download
             var providerResponse = await apiDownloader.Download();
 
@@ -40,12 +48,16 @@ namespace ApiIntegration.Services
             await ImportAvailabilities(new ImportAvailabilitiesRequest
             {
                 Availabilities = providerResponse.Body,
-                ProviderId = providerId
+                Provider = provider
             });
 
             logger.LogInformation("Download Finished");
         }
 
+        private async Task<Provider> GetProvider(int providerId)
+        {
+            return await providerRepository.Get(providerId);
+        }
 
         private async Task ImportAvailabilities(ImportAvailabilitiesRequest req)
         {
@@ -53,7 +65,6 @@ namespace ApiIntegration.Services
 
             if (req.Availabilities == null || !req.Availabilities.Any())
                 return;
-            var provider = await providerRepository.Get(req.ProviderId);
 
             foreach (var item in req.Availabilities)
             {
@@ -66,5 +77,7 @@ namespace ApiIntegration.Services
 
             // Save to repositories
         }
+
+
     }
 }

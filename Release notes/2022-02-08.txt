@@ -1,0 +1,8 @@
+Release notes 08/02/2022:
+Updated framework from .NET Core 2.1 to .NET 6.
+Importer has been moved to Services namespace.
+ProviderRepository and TourRepository moved to Data namespace.
+Implemented web-app to view repository data and trigger import.
+Implemented tour availability update.
+Implemented pricing adjustment.
+New configuration value for API endpoint in appsettings.json file.

@@ -16,7 +16,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIntegrationWebApp", "Api
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{2C8CDA39-8C53-4AD6-8E7E-70334205A342}"
 	ProjectSection(SolutionItems) = preProject
+		Images\launch.png = Images\launch.png
 		Images\nuget.png = Images\nuget.png
+		Images\unit-tests.png = Images\unit-tests.png
+		Images\web-app.png = Images\web-app.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotes", "ReleaseNotes", "{421830EB-30DD-47B4-A4F7-753EF6E62062}"
+	ProjectSection(SolutionItems) = preProject
+		Release notes\2022-02-08.txt = Release notes\2022-02-08.txt
 	EndProjectSection
 EndProject
 Global
@@ -43,6 +51,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2C8CDA39-8C53-4AD6-8E7E-70334205A342} = {C34D1F04-7474-4694-83E4-7AC3CDB73D36}
+		{421830EB-30DD-47B4-A4F7-753EF6E62062} = {C34D1F04-7474-4694-83E4-7AC3CDB73D36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86D94FA2-A617-4005-A495-7448F60523EF}

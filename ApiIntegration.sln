@@ -12,7 +12,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiIntegrationWebApp", "ApiIntegrationWebApp\ApiIntegrationWebApp.csproj", "{A1F162D8-ECF8-4881-A54F-148261A25BCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiIntegrationWebApp", "ApiIntegrationWebApp\ApiIntegrationWebApp.csproj", "{A1F162D8-ECF8-4881-A54F-148261A25BCE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{2C8CDA39-8C53-4AD6-8E7E-70334205A342}"
+	ProjectSection(SolutionItems) = preProject
+		Images\nuget.png = Images\nuget.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +40,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C8CDA39-8C53-4AD6-8E7E-70334205A342} = {C34D1F04-7474-4694-83E4-7AC3CDB73D36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86D94FA2-A617-4005-A495-7448F60523EF}

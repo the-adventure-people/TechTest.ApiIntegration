@@ -1,3 +1,33 @@
+# API Integration
+
+The API Integration solution is used for importing and viewing tour availability.
+
+![Nuget restore](/Images/web-app.png)
+
+## How to run the solution
+This section describes how to get started with the ApiIntegration.
+
+### Requirements
+1. The .NET 6 SDK. The tests and web-app projects are running the latest .NET version.
+
+
+### Steps
+1. Clone the repository to your local machine.
+2. Switch to the dev-ap branch.
+3. Ensure Nuget packages have been restored.
+
+![Nuget restore](/Images/nuget.png)
+
+### Unit tests
+Open the test explorer in Visual Studio to run the tests.
+
+![Nuget restore](/Images/unit-tests.png)
+
+### Debugging
+Launch the ApiIntegrationWebApp project to run the web application. From here you may view tours, availability, and start and import.
+
+![Nuget restore](/Images/launch.png)
+
 # API Integration Technical Test
 
 We need to connect a new provider (id = 1) and download their JSON tour availability data via an API

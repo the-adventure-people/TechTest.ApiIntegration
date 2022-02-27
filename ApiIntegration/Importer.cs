@@ -11,7 +11,7 @@ namespace ApiIntegration
         private readonly IProviderRepository providerRepository;
         private readonly IApiDownloader apiDownloader;
         private readonly ILogger logger;
-
+        private readonly ModelConverter converter;
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
@@ -22,6 +22,7 @@ namespace ApiIntegration
             this.providerRepository = providerRepository;
             this.apiDownloader = apiDownloader;
             this.logger = logger;
+            converter = new ModelConverter();
         }
 
 
@@ -32,6 +33,7 @@ namespace ApiIntegration
             var providerResponse = await apiDownloader.Download();
 
             // Transform provider model to our model
+            var tourAvailabilities = converter.ConvertToTourAvailability(providerResponse);
 
             // Adjust prices
 

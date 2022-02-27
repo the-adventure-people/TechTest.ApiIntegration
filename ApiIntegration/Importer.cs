@@ -1,6 +1,8 @@
 ﻿using ApiIntegration.Interfaces;
+using ApiIntegration.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiIntegration
@@ -11,7 +13,8 @@ namespace ApiIntegration
         private readonly IProviderRepository providerRepository;
         private readonly IApiDownloader apiDownloader;
         private readonly ILogger logger;
-        private readonly ModelConverter converter;
+        private TourService tourService;
+        
         public Importer(
             ITourRepository tourRepository,
             IProviderRepository providerRepository,
@@ -22,7 +25,8 @@ namespace ApiIntegration
             this.providerRepository = providerRepository;
             this.apiDownloader = apiDownloader;
             this.logger = logger;
-            converter = new ModelConverter();
+            
+            tourService = new TourService(providerRepository); 
         }
 
 
@@ -33,18 +37,18 @@ namespace ApiIntegration
             var providerResponse = await apiDownloader.Download();
 
             // Transform provider model to our model
-            var tourAvailabilities = converter.ConvertToTourAvailability(providerResponse);
+            var tourAvailabilities = await tourService.ConvertToTourAvailability(providerResponse);
 
             // Adjust prices
 
+            tourService.AdjustAllPrices(tourAvailabilities, providerId);
             // Save to repositories
+
+            await tourService.UpdateAvailabilities(tourAvailabilities);
 
             logger.LogInformation("Download Finished");
         }
 
-        private async Task<decimal> AdjustPrice(decimal price)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

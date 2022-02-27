@@ -26,7 +26,13 @@ namespace ApiIntegration
         {
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, "/");
             var response = await _httpClient.SendAsync(httpRequest);
-            var availabilityResponse = JsonConvert.DeserializeObject<ApiAvailabilityResponse>(await response.Content.ReadAsStringAsync());
+            ApiAvailabilityResponse availabilityResponse = new ApiAvailabilityResponse();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                availabilityResponse = JsonConvert.DeserializeObject<ApiAvailabilityResponse>(await response.Content.ReadAsStringAsync());
+            }
+            
             return availabilityResponse;
         }
     }

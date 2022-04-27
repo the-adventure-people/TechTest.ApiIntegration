@@ -77,7 +77,7 @@ namespace ApiIntegration
             };
         }
 
-        public Task<Tour> Get(int tourId, string tourRef)
+        public Task<Tour> GetAsync(int tourId, string tourRef)
         {
             Tour tour;
             if (tourId != default && this.tours.ContainsKey(tourId))
@@ -97,19 +97,20 @@ namespace ApiIntegration
             return Task.FromResult(tour);
         }
 
-        public Task Update(Tour tour)
+        public Task<bool> UpdateAsync(Tour tour)
         {
             if (tour.TourId != default
                     && tours.ContainsKey(tour.TourId))
             {
                 tours[tour.TourId] = tour;
+                return Task.FromResult(true);
             }
             else
             {
                 throw new Exception($"Tour with TourId: {tour.TourId} does not exist");
             };
 
-            return Task.CompletedTask;
+            //return Task.FromResult(true);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace ApiIntegration.Interfaces
 {
-    public interface IImporter
+    public interface IImporterService
     {
         Task Execute(int providerId);
     }

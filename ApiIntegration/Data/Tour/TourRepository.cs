@@ -97,20 +97,20 @@ namespace ApiIntegration
             return Task.FromResult(tour);
         }
 
-        public Task<bool> UpdateAsync(Tour tour)
+        public Task UpdateAsync(Tour tour)
         {
             if (tour.TourId != default
                     && tours.ContainsKey(tour.TourId))
             {
                 tours[tour.TourId] = tour;
-                return Task.FromResult(true);
+
             }
             else
             {
                 throw new Exception($"Tour with TourId: {tour.TourId} does not exist");
             };
 
-            //return Task.FromResult(true);
+            return Task.CompletedTask;
         }
     }
 }

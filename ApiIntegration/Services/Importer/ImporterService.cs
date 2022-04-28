@@ -68,8 +68,6 @@ namespace ApiIntegration
             var availabilityResults = providerResponse.Body;
             var tourAvailabilities = new List<TourAvailability>();
 
-            // get the tour
-
             foreach (var availabilityResult in availabilityResults)
             {
                 var tour = await _tourService.GetAsync(providerId, availabilityResult.ProductCode);
@@ -90,7 +88,7 @@ namespace ApiIntegration
         private async Task<decimal> AdjustToSellingPrice(decimal price, int providerId)
         {
             var provider = await _providerRepository.Get(providerId);
-            var commission = provider.Commission;
+            var commission = price * provider.Commission;
             var discount = price * 0.05m;
 
             return price + commission - discount;

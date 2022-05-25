@@ -104,13 +104,25 @@ namespace ApiIntegration.UnitTests.TourServiceTests
         }
 
         [Fact]
-        public async Task GetAsync_String_ShouldReturnNull_WhenTourDoesNotExist()
+        public async Task GetAsync_Int_ShouldReturnNull_WhenTourDoesNotExist()
         {
             Tour tour = new Tour();
 
             _tourRepository.GetAsync(Arg.Any<int>()).Returns(tour);
 
             var result = await _tourService.GetAsync(tour.TourId);
+
+            Assert.Equal(tour, result);
+        }
+
+        [Fact]
+        public async Task GetAsync_String_ShouldReturnNull_WhenTourDoesNotExist()
+        {
+            Tour tour = new Tour();
+
+            _tourRepository.GetAsync(Arg.Any<string>()).Returns(tour);
+
+            var result = await _tourService.GetAsync(tour.TourRef);
 
             Assert.Equal(tour, result);
         }

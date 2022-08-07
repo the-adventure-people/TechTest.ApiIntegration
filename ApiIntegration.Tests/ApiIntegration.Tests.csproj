@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="nunit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
@@ -13,6 +15,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiIntegration\ApiIntegration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Providers\" />
   </ItemGroup>
 
 </Project>
